@@ -2,47 +2,34 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>تحميل الفيديو بدون علامة مائية</title>
   <style>
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes glowText {
-      from { text-shadow: 0 0 10px #ff66cc; }
-      to { text-shadow: 0 0 25px #ffccff; }
-    }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 10px #66ffcc; }
-      100% { box-shadow: 0 0 25px #99ffff; }
-    }
     body {
       margin: 0;
-      padding: 30px;
+      padding: 0;
       font-family: 'Tahoma', sans-serif;
       color: white;
       text-align: center;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(270deg, #ffe6f7, #e6faff, #fff5cc);
-      background-size: 600% 600%;
-      animation: gradientBG 20s ease infinite;
-      position: relative;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
+      transition: background 1s ease;
     }
-    #visitorCount {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px #ff66cc;
-      animation: glowText 2s ease-in-out infinite alternate;
-    }
+
     h1 {
       font-size: 24px;
-      margin-bottom: 10px;
-      text-shadow: 0 0 6px #ff66cc;
+      margin: 20px 0 10px;
+      z-index: 1;
+      position: relative;
     }
+
+    .info {
+      font-size: 16px;
+      margin-bottom: 15px;
+      z-index: 1;
+      position: relative;
+    }
+
     input[type="text"] {
       width: 80%;
       padding: 10px;
@@ -50,165 +37,141 @@
       border-radius: 10px;
       border: none;
       font-size: 16px;
-      box-shadow: 0 0 10px #66ffff;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      transition: box-shadow 0.3s ease;
     }
-    input[type="text"]:focus {
-      outline: none;
-      box-shadow: 0 0 20px #99ffff;
-      background: rgba(255, 255, 255, 0.2);
-    }
+
     button {
       margin-top: 15px;
       padding: 10px 20px;
       font-size: 16px;
       border: none;
       border-radius: 10px;
-      background-color: #66ffcc;
-      color: #000;
+      background-color: #ff0055;
+      color: white;
       cursor: pointer;
-      box-shadow: 0 0 10px #66ffcc;
+      box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055;
       transition: 0.3s;
-      animation: pulseGlow 3s infinite alternate ease-in-out;
     }
+
     button:hover {
-      background-color: #99ffff;
-      box-shadow: 0 0 20px #ccffff;
+      background-color: #ff3377;
+      box-shadow: 0 0 15px #ff3377, 0 0 30px #ff3377;
     }
+
     video {
       margin-top: 20px;
       max-width: 90%;
-      border-radius: 15px;
-      box-shadow: 0 0 15px #66ffcc;
     }
-    .info {
-      font-size: 16px;
-      margin-bottom: 15px;
-      text-shadow: 0 0 6px #66ffcc;
+
+    #videoContainer {
+      display: none;
     }
-    .tg-btn {
-      margin-top: 15px;
-      display: inline-flex;
-      align-items: center;
-      background-color: #0088cc;
-      color: white;
-      border-radius: 50px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: none;
-      box-shadow: 0 0 10px #00ccff;
-      transition: 0.3s;
+
+    
+    a.telegram {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
     }
-    .tg-btn:hover {
-      box-shadow: 0 0 20px #99e6ff;
+
+    a.telegram img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #00acee, 0 0 25px #00acee;
     }
-    .tg-icon {
-      width: 24px;
-      height: 24px;
-      margin-right: 10px;
-    }
+
+    
     .cube {
-      position: absolute;
-      border-radius: 10px;
-      animation-timing-function: linear;
-      opacity: 0.7;
-      filter: drop-shadow(0 0 8px #fff);
-      transition: background 2s;
+      width: 15px;
+      height: 15px;
+      background-color: rgba(255, 255, 255, 0.1);
+      position: fixed;
+      top: -20px;
+      animation: fall linear infinite;
+      border-radius: 4px;
+      box-shadow: 0 0 5px #fff;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+      }
     }
   </style>
 </head>
 <body>
+  <h1>عدد مشتركين الموقع: <span id="visitor-count">1027</span></h1>
+  <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
+  <div class="info">ادخل رابط فيديو من تيك توك للتحميل بدون علامة مائية</div>
+  <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا">
+  <br>
+  <button onclick="downloadVideo()">تحميل الفيديو</button>
+  <div id="videoContainer">
+    <video id="video" controls></video>
+    <br>
+    <a id="downloadBtn" download="video.mp4">
+      <button>تنزيل إلى جهازك</button>
+    </a>
+  </div>
 
-<div id="visitorCount">عدد مشتركين الموقع: 1027</div>
-<h1>المالك: رضا<br>تلي: @lJJ2l</h1>
-<div class="info">ادخل رابط فيديو من تيك توك للتحميل بدون علامة مائية</div>
-<input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا" />
-<br />
-<button onclick="downloadVideo()">تحميل الفيديو</button>
-<br />
-<a class="tg-btn" href="https://t.me/bsx_hl" target="_blank" rel="noopener">
-  <img class="tg-icon" src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" />
-  دخول تليجرام
-</a>
-<div id="videoContainer" style="display:none">
-  <video id="video" controls></video>
-  <br />
-  <a id="downloadBtn" download="video.mp4"><button>تنزيل إلى جهازك</button></a>
-</div>
+  <!-- Telegram Button -->
+  <a href="https://t.me/bsx_hl" target="_blank" class="telegram">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+  </a>
 
-<script>
-  const counterKey = 'rezasite/visitors';
-  async function updateVisitorCount() {
-    try {
-      const res = await fetch(`https://api.countapi.xyz/hit/${counterKey}`);
-      const data = await res.json();
-      document.getElementById('visitorCount').textContent = 'عدد مشتركين الموقع: ' + (data.value >= 1027 ? data.value : 1027);
-    } catch {
-      document.getElementById('visitorCount').textContent = 'عدد مشتركين الموقع: 1027';
-    }
-  }
-  updateVisitorCount();
+  <script>
+    // تغيير خلفية كل 20 ثانية
+    const colors = [
+      'linear-gradient(135deg, #1e1e2f, #2e2e3f)',
+      'linear-gradient(135deg, #283c86, #45a247)',
+      'linear-gradient(135deg, #f7971e, #ffd200)',
+      'linear-gradient(135deg, #7b4397, #dc2430)',
+      'linear-gradient(135deg, #00c6ff, #0072ff)'
+    ];
+    let index = 0;
+    setInterval(() => {
+      index = (index + 1) % colors.length;
+      document.body.style.background = colors[index];
+    }, 20000);
 
-  async function downloadVideo() {
-    const url = document.getElementById('videoUrl').value;
-    if (!url) return alert('رجاءً أدخل رابط الفيديو');
-    const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-      if (data.data && data.data.play) {
-        const videoSrc = data.data.play;
-        const videoElement = document.getElementById('video');
-        videoElement.src = videoSrc;
-        document.getElementById('downloadBtn').href = videoSrc;
-        document.getElementById('videoContainer').style.display = 'block';
-      } else {
-        alert('لم يتم العثور على فيديو');
+    
+    async function downloadVideo() {
+      const url = document.getElementById('videoUrl').value;
+      if (!url) return alert('رجاءً أدخل رابط الفيديو');
+      const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        if (data.data && data.data.play) {
+          const videoSrc = data.data.play;
+          document.getElementById('video').src = videoSrc;
+          document.getElementById('downloadBtn').href = videoSrc;
+          document.getElementById('videoContainer').style.display = 'block';
+        } else {
+          alert('لم يتم العثور على فيديو');
+        }
+      } catch (err) {
+        alert('حدث خطأ أثناء تحميل الفيديو');
       }
-    } catch (err) {
-      alert('حدث خطأ أثناء تحميل الفيديو');
     }
-  }
 
-  const colors = ['#66ffcc', '#ffccff', '#ffff99', '#ccffff', '#ffcccc', '#e6ccff', '#ccffcc'];
-  function randomRange(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-  function createCube() {
-    const cube = document.createElement('div');
-    cube.classList.add('cube');
-    cube.style.width = cube.style.height = randomRange(20, 60) + 'px';
-    cube.style.left = randomRange(0, window.innerWidth) + 'px';
-    cube.style.top = -100 + 'px';
-    cube.speed = randomRange(0.5, 2);
-    document.body.appendChild(cube);
-    return cube;
-  }
-  const cubes = [];
-  for (let i = 0; i < 30; i++) {
-    const cube = createCube();
-    cube.style.background = colors[Math.floor(Math.random() * colors.length)];
-    cubes.push(cube);
-  }
-  function animateCubes() {
-    for (const cube of cubes) {
-      let top = parseFloat(cube.style.top);
-      top += cube.speed;
-      if (top > window.innerHeight) {
-        top = -100;
-        cube.style.left = randomRange(0, window.innerWidth) + 'px';
-        cube.style.width = cube.style.height = randomRange(20, 60) + 'px';
-        cube.speed = randomRange(0.5, 2);
-        cube.style.background = colors[Math.floor(Math.random() * colors.length)];
-      }
-      cube.style.top = top + 'px';
+    
+    function createCube() {
+      const cube = document.createElement("div");
+      cube.classList.add("cube");
+      cube.style.left = `${Math.random() * 100}vw`;
+      cube.style.animationDuration = `${5 + Math.random() * 5}s`;
+
+      cube.addEventListener('animationiteration', () => {
+        cube.style.backgroundColor = 'rgba(0,255,255,0.6)';
+        cube.style.boxShadow = '0 0 15px cyan';
+      });
+
+      document.body.appendChild(cube);
+      setTimeout(() => cube.remove(), 10000);
     }
-    requestAnimationFrame(animateCubes);
-  }
-  animateCubes();
-</script>
+    setInterval(createCube, 300);
+  </script>
 </body>
 </html>
