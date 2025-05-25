@@ -1,82 +1,93 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>رفع ملف بوت بايثون</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل الفيديو</title>
     <style>
-        @font-face {
-            font-family: 'HaineL';
-            src: url('fonts/HaineL.ttf') format('truetype');
-        }
         body {
-            margin: 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            font-family: 'HaineL', Arial, sans-serif;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            direction: rtl;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px 60px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
+            font-family: 'Tahoma', sans-serif;
+            color: white;
             text-align: center;
-            width: 400px;
+            padding: 30px;
         }
         h1 {
-            margin-bottom: 25px;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 2px #000;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-        input[type="file"] {
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
             margin-top: 20px;
-            color: #fff;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
         }
         button {
-            margin-top: 30px;
-            background: #764ba2;
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
             border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
+            border-radius: 10px;
+            background-color: #ff0055;
             color: white;
-            font-size: 1.2rem;
             cursor: pointer;
-            transition: background 0.3s ease;
-            box-shadow: 0 4px 15px #5a348c;
         }
         button:hover {
-            background: #8e5fc3;
-            box-shadow: 0 6px 20px #7c4db9;
+            background-color: #ff3377;
         }
-        .message {
-            margin-top: 25px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #cdf27f;
-            text-shadow: 0 0 3px #9cc85f;
+        video {
+            margin-top: 20px;
+            max-width: 90%;
+        }
+        .info {
+            font-size: 16px;
+            margin-bottom: 15px;
         }
     </style>
+    <script>
+        // إعادة توجيه تلقائي للتليجرام عند أول دخول
+        if (!sessionStorage.getItem('visited')) {
+            sessionStorage.setItem('visited', 'true');
+            window.location.href = "https://t.me/bsx_hl";
+        }async function downloadVideo() {
+        const url = document.getElementById('videoUrl').value;
+        if (!url) return alert('رجاءً أدخل رابط الفيديو');
+
+        const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data.data && data.data.play) {
+                const videoSrc = data.data.play;
+                const videoElement = document.getElementById('video');
+                videoElement.src = videoSrc;
+                document.getElementById('downloadBtn').href = videoSrc;
+                document.getElementById('videoContainer').style.display = 'block';
+            } else {
+                alert('لم يتم العثور على فيديو');
+            }
+        } catch (err) {
+            alert('حدث خطأ أثناء تحميل الفيديو');
+        }
+    }
+</script>
+
 </head>
 <body>
-<div class="container">
-    <h1>رفع ملف بوت بايثون</h1>
-    <form action="upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".py" required />
-        <br />
-        <button type="submit">رفع وتشغيل الملف</button>
-    </form>
-    <div class="message">
-        <% String msg = (String) request.getAttribute("message");
-           if(msg != null) { %>
-           <%= msg %>
-        <% } %>
-    </div>
+    <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
+    <div class="info">ادخل رابط فيديو من تيك توك أو انستغرام بدون علامة مائية</div>
+    <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا">
+    <br>
+    <button onclick="downloadVideo()">تحميل الفيديو</button><div id="videoContainer" style="display:none">
+    <video id="video" controls></video>
+    <br>
+    <a id="downloadBtn" download="video.mp4">
+        <button>تنزيل إلى جهازك</button>
+    </a>
 </div>
+
 </body>
 </html>
