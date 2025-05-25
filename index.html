@@ -1,130 +1,162 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>تحميل الفيديو بدون علامة مائية</title>
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
-            font-family: 'Tahoma', sans-serif;
-            color: white;
-            text-align: center;
-            padding: 30px;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 10px;
-            border: none;
-            font-size: 16px;
-        }
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            background-color: #ff0055;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #ff3377;
-        }
-        video {
-            margin-top: 20px;
-            max-width: 90%;
-        }
-        .info {
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        #telegramBtn {
-            margin-top: 30px;
-            cursor: pointer;
-            width: 50px;
-            height: 50px;
-        }
-    </style>
-    <script>
-        async function downloadVideo() {
-            const url = document.getElementById('videoUrl').value.trim();
-            if (!url) return alert('رجاءً أدخل رابط الفيديو');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تحميل الفيديو بدون علامة مائية</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tahoma', sans-serif;
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
+      transition: background 2s;
+      animation: gradientChange 10s infinite alternate;
+    }
 
-            let apiUrl = '';
-            if (url.includes('tiktok.com')) {
-                apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-            } else if (
-                url.includes('facebook.com') ||
-                url.includes('fb.watch') ||
-                url.includes('twitter.com') ||
-                url.includes('pinterest.com') ||
-                url.includes('instagram.com')
-            ) {
-                apiUrl = `https://api.savevideo.me/download?url=${encodeURIComponent(url)}`;
-            } else {
-                alert('المنصة غير مدعومة حالياً');
-                return;
-            }
+    @keyframes gradientChange {
+      0% { background: linear-gradient(135deg, #1e1e2f, #2e2e3f); }
+      50% { background: linear-gradient(135deg, #4b0082, #000000); }
+      100% { background: linear-gradient(135deg, #000000, #1a1a40); }
+    }
 
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
+    .glow-btn {
+      margin-top: 15px;
+      padding: 10px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #ff0055;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 20px #ff0055;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-                // تفكيك الرابط للفيديو حسب المنصة
-                let videoSrc = '';
-                if (url.includes('tiktok.com')) {
-                    if (data.data && data.data.play) {
-                        videoSrc = data.data.play;
-                    }
-                } else {
-                    // api.savevideo.me يعيد رابط مباشر في data.urls[0].url
-                    if (data.urls && data.urls.length > 0) {
-                        videoSrc = data.urls[0].url;
-                    }
-                }
+    .glow-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #ff3377;
+    }
 
-                if (videoSrc) {
-                    const videoElement = document.getElementById('video');
-                    videoElement.src = videoSrc;
-                    document.getElementById('downloadBtn').href = videoSrc;
-                    document.getElementById('videoContainer').style.display = 'block';
-                } else {
-                    alert('لم يتم العثور على فيديو');
-                }
-            } catch (err) {
-                alert('حدث خطأ أثناء تحميل الفيديو');
-            }
+    .bar {
+      position: fixed;
+      top: -10px;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, #ff00cc, #3333ff);
+      animation: slideBar 6s infinite ease-in-out;
+    }
+
+    @keyframes slideBar {
+      0% { top: -10px; opacity: 0; }
+      25% { top: 0px; opacity: 1; }
+      75% { top: 0px; opacity: 1; }
+      100% { top: -10px; opacity: 0; }
+    }
+
+    .floating-text {
+      position: absolute;
+      top: 10%;
+      left: -100%;
+      font-size: 22px;
+      color: #ffffff70;
+      animation: floatText 15s linear infinite;
+    }
+
+    @keyframes floatText {
+      0% { left: -100%; }
+      50% { left: 50%; transform: translateX(-50%); }
+      100% { left: 120%; }
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      box-shadow: 0 0 10px #888;
+    }
+
+    video {
+      margin-top: 20px;
+      max-width: 90%;
+      border-radius: 10px;
+    }
+
+    .telegram-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .telegram-btn img {
+      width: 50px;
+      height: 50px;
+      transition: transform 0.3s ease;
+    }
+
+    .telegram-btn img:hover {
+      transform: scale(1.2);
+    }
+  </style>
+  <script>
+    async function downloadVideo() {
+      const url = document.getElementById('videoUrl').value;
+      if (!url) return alert('رجاءً أدخل رابط الفيديو');
+      const apiUrl = `https://aiovideodl.ml/api?url=${encodeURIComponent(url)}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data && data.medias && data.medias.length > 0) {
+          const videoSrc = data.medias[0].url;
+          const videoElement = document.getElementById('video');
+          videoElement.src = videoSrc;
+          document.getElementById('downloadBtn').href = videoSrc;
+          document.getElementById('videoContainer').style.display = 'block';
+        } else {
+          alert('لم يتم العثور على فيديو أو الرابط غير مدعوم');
         }
-    </script>
+      } catch (err) {
+        alert('حدث خطأ أثناء تحميل الفيديو');
+      }
+    }
+  </script>
 </head>
 <body>
-    <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
-    <div class="info">ادخل رابط فيديو من تيك توك للتنزيل بدون علامة مائية 
-    </div>
-    <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا" />
-    <br />
-    <button onclick="downloadVideo()">تحميل الفيديو</button>
-    <div id="videoContainer" style="display:none">
-        <video id="video" controls></video>
-        <br />
-        <a id="downloadBtn" download="video.mp4">
-            <button>تنزيل إلى جهازك</button>
-        </a>
-    </div>
-    <br />
-    <a href="https://t.me/bsx_hl" target="_blank" title="تليجرام">
-        <img
-            id="telegramBtn"
-            src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
-            alt="Telegram"
-        />
+  <div class="bar"></div>
+  <div class="floating-text">مرحبا بك في موقع التحميل </div>
+
+  <div style="font-size: 16px; margin-bottom: 10px;">
+    عدد مشتركين الموقع: 
+    <img src="https://hitwebcounter.com/counter/counter.php?page=1234567&style=0036&nbdigits=4&type=page&initCount=1507" title="عدد الزوار" Alt="web counter" border="0" />
+  </div>
+
+  <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
+  <div class="info">ادخل رابط فيديو من تيك توك، للتنزيل بدون علامة مائيه</div>
+  <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا">
+  <br>
+  <button class="glow-btn" onclick="downloadVideo()">تحميل الفيديو</button>
+
+  <div id="videoContainer" style="display:none">
+    <video id="video" controls></video>
+    <br>
+    <a id="downloadBtn" download="video.mp4">
+      <button class="glow-btn">تنزيل إلى جهازك</button>
     </a>
+  </div>
+
+  <a class="telegram-btn" href="https://t.me/bsx_hl" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+  </a>
 </body>
 </html>
