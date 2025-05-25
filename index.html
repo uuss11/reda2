@@ -1,8 +1,9 @@
-<!DOCTYPE html><html lang="ar">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحميل تيك توك بدون علامه مائيه</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تحميل الفيديو بدون علامة مائية</title>
     <style>
         body {
             background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
@@ -44,50 +45,85 @@
             font-size: 16px;
             margin-bottom: 15px;
         }
+        #telegramBtn {
+            margin-top: 30px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+        }
     </style>
     <script>
-        // إعادة توجيه تلقائي للتليجرام عند أول دخول
-        if (!sessionStorage.getItem('visited')) {
-            sessionStorage.setItem('visited', 'true');
-            window.location.href = "https://t.me/bsx_hl";
-        }async function downloadVideo() {
-        const url = document.getElementById('videoUrl').value;
-        if (!url) return alert('رجاءً أدخل رابط الفيديو');
+        async function downloadVideo() {
+            const url = document.getElementById('videoUrl').value.trim();
+            if (!url) return alert('رجاءً أدخل رابط الفيديو');
 
-        const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            if (data.data && data.data.play) {
-                const videoSrc = data.data.play;
-                const videoElement = document.getElementById('video');
-                videoElement.src = videoSrc;
-                document.getElementById('downloadBtn').href = videoSrc;
-                document.getElementById('videoContainer').style.display = 'block';
+            let apiUrl = '';
+            if (url.includes('tiktok.com')) {
+                apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+            } else if (
+                url.includes('facebook.com') ||
+                url.includes('fb.watch') ||
+                url.includes('twitter.com') ||
+                url.includes('pinterest.com') ||
+                url.includes('instagram.com')
+            ) {
+                apiUrl = `https://api.savevideo.me/download?url=${encodeURIComponent(url)}`;
             } else {
-                alert('لم يتم العثور على فيديو');
+                alert('المنصة غير مدعومة حالياً');
+                return;
             }
-        } catch (err) {
-            alert('حدث خطأ أثناء تحميل الفيديو');
-        }
-    }
-</script>
 
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // تفكيك الرابط للفيديو حسب المنصة
+                let videoSrc = '';
+                if (url.includes('tiktok.com')) {
+                    if (data.data && data.data.play) {
+                        videoSrc = data.data.play;
+                    }
+                } else {
+                    // api.savevideo.me يعيد رابط مباشر في data.urls[0].url
+                    if (data.urls && data.urls.length > 0) {
+                        videoSrc = data.urls[0].url;
+                    }
+                }
+
+                if (videoSrc) {
+                    const videoElement = document.getElementById('video');
+                    videoElement.src = videoSrc;
+                    document.getElementById('downloadBtn').href = videoSrc;
+                    document.getElementById('videoContainer').style.display = 'block';
+                } else {
+                    alert('لم يتم العثور على فيديو');
+                }
+            } catch (err) {
+                alert('حدث خطأ أثناء تحميل الفيديو');
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
-    <div class="info">ادخل رابط فيديو من تيك توك أو انستغرام بدون علامة مائية</div>
-    <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا">
-    <br>
-    <button onclick="downloadVideo()">تحميل الفيديو</button><div id="videoContainer" style="display:none">
-    <video id="video" controls></video>
-    <br>
-    <a id="downloadBtn" download="video.mp4">
-        <button>تنزيل إلى جهازك</button>
+    <div class="info">ادخل رابط فيديو من تيك توك، فيسبوك، تويتر، بنترست أو انستغرام بدون علامة مائية</div>
+    <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا" />
+    <br />
+    <button onclick="downloadVideo()">تحميل الفيديو</button>
+    <div id="videoContainer" style="display:none">
+        <video id="video" controls></video>
+        <br />
+        <a id="downloadBtn" download="video.mp4">
+            <button>تنزيل إلى جهازك</button>
+        </a>
+    </div>
+    <br />
+    <a href="https://t.me/bsx_hl" target="_blank" title="تليجرام">
+        <img
+            id="telegramBtn"
+            src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
+            alt="Telegram"
+        />
     </a>
-</div>
-
 </body>
 </html>
