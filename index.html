@@ -1,74 +1,151 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>تحميل الفيديو بدون علامة مائية</title>
-<style>
-  body {
-    background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
-    font-family: 'Tahoma', sans-serif;
-    color: white;
-    text-align: center;
-    padding: 30px;
-  }
-  h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    margin-top: 20px;
-    border-radius: 10px;
-    border: none;
-    font-size: 16px;
-  }
-  button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 10px;
-    background-color: #ff0055;
-    color: white;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #ff3377;
-  }
-  video {
-    margin-top: 20px;
-    max-width: 90%;
-  }
-  .info {
-    font-size: 16px;
-    margin-bottom: 15px;
-  }
-  /* زر التليجرام */
-  .tg-btn {
-    margin-top: 15px;
-    display: inline-flex;
-    align-items: center;
-    background-color: #0088cc;
-    color: white;
-    border-radius: 50px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    box-shadow: 0 0 10px #0088cc;
-    transition: 0.3s;
-  }
-  .tg-btn:hover {
-    box-shadow: 0 0 20px #00aaff;
-  }
-  .tg-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تحميل الفيديو بدون علامة مائية</title>
+  <style>
+    
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+    body {
+      margin: 0;
+      padding: 30px;
+      font-family: 'Tahoma', sans-serif;
+      color: white;
+      text-align: center;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(270deg, #1e1e2f, #2e2e3f, #1e1e2f);
+      background-size: 600% 600%;
+      animation: gradientBG 20s ease infinite;
+      position: relative;
+    }
+
+    
+    #visitorCount {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #ff0055;
+      animation: glowText 2s ease-in-out infinite alternate;
+    }
+    @keyframes glowText {
+      from {
+        text-shadow: 0 0 10px #ff0055;
+      }
+      to {
+        text-shadow: 0 0 25px #ff77aa;
+      }
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 6px #ff0055;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      box-shadow: 0 0 10px #ff0055;
+      background: rgba(255, 0, 85, 0.15);
+      color: white;
+      transition: box-shadow 0.3s ease;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 20px #ff3377;
+      background: rgba(255, 0, 85, 0.3);
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ff0055;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff0055;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #ff3377;
+      box-shadow: 0 0 20px #ff77aa;
+    }
+    video {
+      margin-top: 20px;
+      max-width: 90%;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #ff0055;
+    }
+    .info {
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 6px #ff0055;
+    }
+
+    
+    .tg-btn {
+      margin-top: 15px;
+      display: inline-flex;
+      align-items: center;
+      background-color: #0088cc;
+      color: white;
+      border-radius: 50px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 10px #0088cc;
+      transition: 0.3s;
+    }
+    .tg-btn:hover {
+      box-shadow: 0 0 20px #00aaff;
+    }
+    .tg-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+
+    
+    .cube {
+      position: absolute;
+      background: rgba(255, 0, 85, 0.15);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.3);
+      animation-timing-function: linear;
+      opacity: 0.7;
+      filter: drop-shadow(0 0 5px #ff77aa);
+    }
+
+    
+    #downloadBtn button {
+      animation: pulseGlow 3s infinite alternate ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 10px #ff0055;
+      }
+      100% {
+        box-shadow: 0 0 25px #ff77aa;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -78,7 +155,7 @@
 
 <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
 
-<div class="info">ادخل رابط فيديو من تيك توك للتنزيل بدون علامة مائية</div>
+<div class="info">ادخل رابط فيديو من تيك توك للتحميل بدون علامة مائية</div>
 
 <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا" />
 <br />
@@ -137,7 +214,49 @@
       alert('حدث خطأ أثناء تحميل الفيديو');
     }
   }
-</script>
 
+  
+  const maxCubes = 30;
+  const cubes = [];
+
+  function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function createCube() {
+    const cube = document.createElement('div');
+    cube.classList.add('cube');
+    cube.style.width = cube.style.height = randomRange(20, 60) + 'px';
+    cube.style.left = randomRange(0, window.innerWidth) + 'px';
+    cube.style.top = -100 + 'px';
+    cube.style.opacity = randomRange(0.3, 0.7);
+    cube.speed = randomRange(0.5, 2);
+    cube.style.transform = `rotate(${randomRange(0,360)}deg)`;
+    document.body.appendChild(cube);
+    return cube;
+  }
+
+  for (let i=0; i<maxCubes; i++) {
+    cubes.push(createCube());
+  }
+
+  function animateCubes() {
+    for (const cube of cubes) {
+      let top = parseFloat(cube.style.top);
+      top += cube.speed;
+      if (top > window.innerHeight) {
+        top = -100;
+        cube.style.left = randomRange(0, window.innerWidth) + 'px';
+        cube.style.width = cube.style.height = randomRange(20, 60) + 'px';
+        cube.style.opacity = randomRange(0.3, 0.7);
+        cube.speed = randomRange(0.5, 2);
+        cube.style.transform = `rotate(${randomRange(0,360)}deg)`;
+      }
+      cube.style.top = top + 'px';
+    }
+    requestAnimationFrame(animateCubes);
+  }
+  animateCubes();
+</script>
 </body>
 </html>
