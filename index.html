@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تحميل الفيديو بدون علامة مائية</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Tahoma', sans-serif;
-      color: white;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Tahoma, sans-serif;
+      overflow: hidden;
       text-align: center;
-      overflow-x: hidden;
+      color: white;
+      padding: 40px 10px;
+      transition: background 2s ease;
       background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
-      transition: background 1s ease;
     }
 
     h1 {
       font-size: 24px;
-      margin: 20px 0 10px;
-      z-index: 1;
-      position: relative;
+      margin-bottom: 10px;
     }
 
     .info {
       font-size: 16px;
-      margin-bottom: 15px;
-      z-index: 1;
-      position: relative;
+      margin-bottom: 20px;
     }
 
     input[type="text"] {
       width: 80%;
       padding: 10px;
-      margin-top: 20px;
       border-radius: 10px;
       border: none;
       font-size: 16px;
@@ -48,13 +48,12 @@
       background-color: #ff0055;
       color: white;
       cursor: pointer;
-      box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055;
-      transition: 0.3s;
+      box-shadow: 0 0 10px #ff0055;
     }
 
     button:hover {
       background-color: #ff3377;
-      box-shadow: 0 0 15px #ff3377, 0 0 30px #ff3377;
+      box-shadow: 0 0 15px #ff3377;
     }
 
     video {
@@ -62,52 +61,78 @@
       max-width: 90%;
     }
 
-    #videoContainer {
-      display: none;
-    }
-
-    
-    a.telegram {
+    #shapes {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
     }
 
-    a.telegram img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      box-shadow: 0 0 15px #00acee, 0 0 25px #00acee;
-    }
-
-    
-    .cube {
-      width: 15px;
-      height: 15px;
-      background-color: rgba(255, 255, 255, 0.1);
-      position: fixed;
-      top: -20px;
+    .shape {
+      position: absolute;
+      opacity: 0.6;
       animation: fall linear infinite;
-      border-radius: 4px;
-      box-shadow: 0 0 5px #fff;
+      border-radius: 50%;
     }
 
     @keyframes fall {
-      to {
-        transform: translateY(110vh) rotate(360deg);
+      0% {
+        transform: translateY(-50px);
       }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    .telegram {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      background: rgba(0, 172, 238, 0.2);
+      padding: 10px 15px;
+      border-radius: 30px;
+      box-shadow: 0 0 15px #00acee;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .telegram:hover {
+      background: rgba(0, 172, 238, 0.4);
+    }
+
+    .telegram img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .telegram span {
+      margin-right: 10px;
+      color: white;
+      font-size: 18px;
+      text-shadow: 0 0 8px #00acee;
+    }
+
+    #counter {
+      font-size: 18px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>عدد مشتركين الموقع: <span id="visitor-count">1027</span></h1>
+
+  <div id="counter">عدد مشتركين الموقع: 1027</div>
   <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
   <div class="info">ادخل رابط فيديو من تيك توك للتحميل بدون علامة مائية</div>
   <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا">
   <br>
   <button onclick="downloadVideo()">تحميل الفيديو</button>
-  <div id="videoContainer">
+
+  <div id="videoContainer" style="display:none">
     <video id="video" controls></video>
     <br>
     <a id="downloadBtn" download="video.mp4">
@@ -115,37 +140,62 @@
     </a>
   </div>
 
-  <!-- Telegram Button -->
   <a href="https://t.me/bsx_hl" target="_blank" class="telegram">
     <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
+    <span>اشترك بقناتي التلي</span>
   </a>
 
-  <script>
-    // تغيير خلفية كل 20 ثانية
-    const colors = [
-      'linear-gradient(135deg, #1e1e2f, #2e2e3f)',
-      'linear-gradient(135deg, #283c86, #45a247)',
-      'linear-gradient(135deg, #f7971e, #ffd200)',
-      'linear-gradient(135deg, #7b4397, #dc2430)',
-      'linear-gradient(135deg, #00c6ff, #0072ff)'
-    ];
-    let index = 0;
-    setInterval(() => {
-      index = (index + 1) % colors.length;
-      document.body.style.background = colors[index];
-    }, 20000);
+  <div id="shapes"></div>
 
-    
+  <script>
+    const colors = ["#1e1e2f", "#2e2e3f", "#33334d", "#3f3f5e", "#202040", "#443377", "#2a2a40", "#292950"];
+    const brightColors = ["#00ffff", "#ff00ff", "#00ffcc", "#ffff00", "#00ff99", "#66ffff"];
+    let colorIndex = 0;
+
+    setInterval(() => {
+      colorIndex = (colorIndex + 1) % colors.length;
+      document.body.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, ${colors[(colorIndex + 1) % colors.length]})`;
+    }, 5000);
+
+    function createShape() {
+      const shape = document.createElement('div');
+      const size = Math.floor(Math.random() * 50) + 20;
+      const isCircle = Math.random() > 0.5;
+      shape.className = 'shape';
+      shape.style.width = `${size}px`;
+      shape.style.height = `${size}px`;
+      shape.style.left = `${Math.random() * 100}%`;
+      shape.style.borderRadius = isCircle ? '50%' : '5px';
+      shape.style.background = brightColors[Math.floor(Math.random() * brightColors.length)];
+      shape.style.animationDuration = `${5 + Math.random() * 5}s`;
+
+      setTimeout(() => {
+        shape.style.background = '#00ccff';
+      }, (Math.random() * 5000));
+
+      document.getElementById('shapes').appendChild(shape);
+
+      setTimeout(() => {
+        shape.remove();
+      }, 10000);
+    }
+
+    setInterval(createShape, 400);
+
     async function downloadVideo() {
       const url = document.getElementById('videoUrl').value;
       if (!url) return alert('رجاءً أدخل رابط الفيديو');
+
       const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
+
         if (data.data && data.data.play) {
           const videoSrc = data.data.play;
-          document.getElementById('video').src = videoSrc;
+          const videoElement = document.getElementById('video');
+          videoElement.src = videoSrc;
           document.getElementById('downloadBtn').href = videoSrc;
           document.getElementById('videoContainer').style.display = 'block';
         } else {
@@ -155,23 +205,6 @@
         alert('حدث خطأ أثناء تحميل الفيديو');
       }
     }
-
-    
-    function createCube() {
-      const cube = document.createElement("div");
-      cube.classList.add("cube");
-      cube.style.left = `${Math.random() * 100}vw`;
-      cube.style.animationDuration = `${5 + Math.random() * 5}s`;
-
-      cube.addEventListener('animationiteration', () => {
-        cube.style.backgroundColor = 'rgba(0,255,255,0.6)';
-        cube.style.boxShadow = '0 0 15px cyan';
-      });
-
-      document.body.appendChild(cube);
-      setTimeout(() => cube.remove(), 10000);
-    }
-    setInterval(createCube, 300);
   </script>
 </body>
 </html>
