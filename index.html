@@ -1,44 +1,28 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html><html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تحميل الفيديو بدون علامة مائية</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تحميل الفيديو</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: Tahoma, sans-serif;
-      overflow: hidden;
-      text-align: center;
-      color: white;
-      padding: 40px 10px;
-      transition: background 2s ease;
       background: linear-gradient(135deg, #1e1e2f, #2e2e3f);
+      font-family: 'Tahoma', sans-serif;
+      color: white;
+      text-align: center;
+      padding: 30px;
     }
-
     h1 {
       font-size: 24px;
       margin-bottom: 10px;
     }
-
-    .info {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
     input[type="text"] {
       width: 80%;
       padding: 10px;
+      margin-top: 20px;
       border-radius: 10px;
       border: none;
       font-size: 16px;
     }
-
     button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -48,175 +32,80 @@
       background-color: #ff0055;
       color: white;
       cursor: pointer;
-      box-shadow: 0 0 10px #ff0055;
     }
-
     button:hover {
       background-color: #ff3377;
-      box-shadow: 0 0 15px #ff3377;
     }
-
     video {
       margin-top: 20px;
       max-width: 90%;
     }
-
-    #shapes {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
+    .info {
+      font-size: 16px;
+      margin-bottom: 15px;
     }
-
-    .shape {
-      position: absolute;
-      opacity: 0.6;
-      animation: fall linear infinite;
-      border-radius: 50%;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-50px);
-      }
-      100% {
-        transform: translateY(100vh);
-      }
-    }
-
-    .telegram {
+    .telegram-btn {
       position: fixed;
       bottom: 20px;
       left: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #0088cc;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      background: rgba(0, 172, 238, 0.2);
-      padding: 10px 15px;
-      border-radius: 30px;
-      box-shadow: 0 0 15px #00acee;
-      text-decoration: none;
-      transition: background 0.3s ease;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 999;
     }
-
-    .telegram:hover {
-      background: rgba(0, 172, 238, 0.4);
-    }
-
-    .telegram img {
+    .telegram-btn img {
       width: 30px;
       height: 30px;
     }
-
-    .telegram span {
-      margin-right: 10px;
-      color: white;
-      font-size: 18px;
-      text-shadow: 0 0 8px #00acee;
-    }
-
-    #counter {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
   </style>
+  <script>
+    async function downloadVideo() {
+      const url = document.getElementById('videoUrl').value;
+      if (!url) return alert('رجاءً أدخل رابط الفيديو');
+
+      const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data.data && data.data.play) {
+          const videoSrc = data.data.play;
+          const videoElement = document.getElementById('video');
+          videoElement.src = videoSrc;
+          document.getElementById('downloadBtn').href = videoSrc;
+          document.getElementById('videoContainer').style.display = 'block';
+        } else {
+          alert('لم يتم العثور على فيديو');
+        }
+      } catch (err) {
+        alert('حدث خطأ أثناء تحميل الفيديو');
+      }
+    }
+  </script>
 </head>
 <body>
-
-  <div id="counter">عدد مشتركين الموقع: 1027</div>
   <h1>المالك: رضا<br>تلي: @lJJ2l</h1>
-  <div class="info">ادخل رابط فيديو من تيك توك للتحميل بدون علامة مائية</div>
+  <div class="info">ادخل رابط فيديو من تيك توك للتنزيل بدون علامة مائية</div>
   <input type="text" id="videoUrl" placeholder="الصق رابط الفيديو هنا">
   <br>
   <button onclick="downloadVideo()">تحميل الفيديو</button>
-
   <div id="videoContainer" style="display:none">
-    <div id="videoContainer" style="display:none; margin-top: 20px;">
-  <video id="video" controls style="width: 100%; max-width: 300px; border-radius: 12px; box-shadow: 0 0 15px #00acee;"></video>
-  <div style="margin-top: 10px;">
+    <video id="video" controls></video>
+    <br>
     <a id="downloadBtn" download="video.mp4">
       <button>تنزيل إلى جهازك</button>
     </a>
   </div>
-    </div>
 
-  <a href="https://t.me/bsx_hl" target="_blank" class="telegram">
-    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
-    <span>اشترك بقناتي التلي</span>
+  <!-- زر تيليجرام -->
+  <a href="https://t.me/bsx_hl" target="_blank" class="telegram-btn">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
   </a>
-
-  <div id="shapes"></div>
-
-  <script>
-  const colors = ["#1e1e2f", "#2e2e3f", "#33334d", "#3f3f5e", "#202040", "#443377", "#2a2a40", "#292950"];
-  const brightColors = ["#00ffff", "#ff00ff", "#00ffcc", "#ffff00", "#00ff99", "#66ffff"];
-  let colorIndex = 0;
-
-  setInterval(() => {
-    colorIndex = (colorIndex + 1) % colors.length;
-    document.body.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, ${colors[(colorIndex + 1) % colors.length]})`;
-  }, 5000);
-
-  function createShape() {
-    const shape = document.createElement('div');
-    const size = Math.floor(Math.random() * 50) + 20;
-    const isCircle = Math.random() > 0.5;
-    shape.className = 'shape';
-    shape.style.width = `${size}px`;
-    shape.style.height = `${size}px`;
-    shape.style.left = `${Math.random() * 100}%`;
-    shape.style.borderRadius = isCircle ? '50%' : '5px';
-    shape.style.background = brightColors[Math.floor(Math.random() * brightColors.length)];
-    shape.style.animationDuration = `${5 + Math.random() * 5}s`;
-
-    setTimeout(() => {
-      shape.style.background = '#00ccff';
-    }, (Math.random() * 5000));
-
-    document.getElementById('shapes').appendChild(shape);
-
-    setTimeout(() => {
-      shape.remove();
-    }, 10000);
-  }
-
-  setInterval(createShape, 400);
-
-  async function downloadVideo() {
-    let url = document.getElementById('videoUrl').value;
-    if (!url) return alert('رجاءً أدخل رابط الفيديو');
-
-    if (url.includes("vt.tiktok.com")) {
-      try {
-        const res = await fetch(url, { redirect: "follow" });
-        url = res.url;
-      } catch (e) {
-        alert("تعذر معالجة الرابط المختصر.");
-        return;
-      }
-    }
-
-    const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-
-      if (data.data && data.data.play) {
-        const videoSrc = data.data.play;
-        const videoElement = document.getElementById('video');
-        videoElement.src = videoSrc;
-        document.getElementById('downloadBtn').href = videoSrc;
-        document.getElementById('videoContainer').style.display = 'block';
-      } else {
-        alert('لم يتم العثور على فيديو');
-      }
-    } catch (err) {
-      alert('حدث خطأ أثناء تحميل الفيديو');
-    }
-  }
-  </script>
 </body>
 </html>
