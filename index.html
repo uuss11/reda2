@@ -150,63 +150,73 @@
   <div id="shapes"></div>
 
   <script>
-    const colors = ["#1e1e2f", "#2e2e3f", "#33334d", "#3f3f5e", "#202040", "#443377", "#2a2a40", "#292950"];
-    const brightColors = ["#00ffff", "#ff00ff", "#00ffcc", "#ffff00", "#00ff99", "#66ffff"];
-    let colorIndex = 0;
+  const colors = ["#1e1e2f", "#2e2e3f", "#33334d", "#3f3f5e", "#202040", "#443377", "#2a2a40", "#292950"];
+  const brightColors = ["#00ffff", "#ff00ff", "#00ffcc", "#ffff00", "#00ff99", "#66ffff"];
+  let colorIndex = 0;
 
-    setInterval(() => {
-      colorIndex = (colorIndex + 1) % colors.length;
-      document.body.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, ${colors[(colorIndex + 1) % colors.length]})`;
-    }, 5000);
+  setInterval(() => {
+    colorIndex = (colorIndex + 1) % colors.length;
+    document.body.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, ${colors[(colorIndex + 1) % colors.length]})`;
+  }, 5000);
 
-    function createShape() {
-      const shape = document.createElement('div');
-      const size = Math.floor(Math.random() * 50) + 20;
-      const isCircle = Math.random() > 0.5;
-      shape.className = 'shape';
-      shape.style.width = `${size}px`;
-      shape.style.height = `${size}px`;
-      shape.style.left = `${Math.random() * 100}%`;
-      shape.style.borderRadius = isCircle ? '50%' : '5px';
-      shape.style.background = brightColors[Math.floor(Math.random() * brightColors.length)];
-      shape.style.animationDuration = `${5 + Math.random() * 5}s`;
+  function createShape() {
+    const shape = document.createElement('div');
+    const size = Math.floor(Math.random() * 50) + 20;
+    const isCircle = Math.random() > 0.5;
+    shape.className = 'shape';
+    shape.style.width = `${size}px`;
+    shape.style.height = `${size}px`;
+    shape.style.left = `${Math.random() * 100}%`;
+    shape.style.borderRadius = isCircle ? '50%' : '5px';
+    shape.style.background = brightColors[Math.floor(Math.random() * brightColors.length)];
+    shape.style.animationDuration = `${5 + Math.random() * 5}s`;
 
-      setTimeout(() => {
-        shape.style.background = '#00ccff';
-      }, (Math.random() * 5000));
+    setTimeout(() => {
+      shape.style.background = '#00ccff';
+    }, (Math.random() * 5000));
 
-      document.getElementById('shapes').appendChild(shape);
+    document.getElementById('shapes').appendChild(shape);
 
-      setTimeout(() => {
-        shape.remove();
-      }, 10000);
-    }
+    setTimeout(() => {
+      shape.remove();
+    }, 10000);
+  }
 
-    setInterval(createShape, 400);
+  setInterval(createShape, 400);
 
-    async function downloadVideo() {
-      const url = document.getElementById('videoUrl').value;
-      if (!url) return alert('رجاءً أدخل رابط الفيديو');
+  async function downloadVideo() {
+    let url = document.getElementById('videoUrl').value;
+    if (!url) return alert('رجاءً أدخل رابط الفيديو');
 
-      const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-
+    if (url.includes("vt.tiktok.com")) {
       try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        if (data.data && data.data.play) {
-          const videoSrc = data.data.play;
-          const videoElement = document.getElementById('video');
-          videoElement.src = videoSrc;
-          document.getElementById('downloadBtn').href = videoSrc;
-          document.getElementById('videoContainer').style.display = 'block';
-        } else {
-          alert('لم يتم العثور على فيديو');
-        }
-      } catch (err) {
-        alert('حدث خطأ أثناء تحميل الفيديو');
+        const res = await fetch(url, { redirect: "follow" });
+        url = res.url;
+      } catch (e) {
+        alert("تعذر معالجة الرابط المختصر.");
+        return;
       }
     }
+
+    const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      if (data.data && data.data.play) {
+        const videoSrc = data.data.play;
+        const videoElement = document.getElementById('video');
+        videoElement.src = videoSrc;
+        document.getElementById('downloadBtn').href = videoSrc;
+        document.getElementById('videoContainer').style.display = 'block';
+      } else {
+        alert('لم يتم العثور على فيديو');
+      }
+    } catch (err) {
+      alert('حدث خطأ أثناء تحميل الفيديو');
+    }
+  }
   </script>
 </body>
 </html>
