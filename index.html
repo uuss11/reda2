@@ -133,12 +133,14 @@
   <button onclick="downloadVideo()">تحميل الفيديو</button>
 
   <div id="videoContainer" style="display:none">
-    <video id="video" controls></video>
-    <br>
+    <div id="videoContainer" style="display:none; margin-top: 20px;">
+  <video id="video" controls style="width: 100%; max-width: 300px; border-radius: 12px; box-shadow: 0 0 15px #00acee;"></video>
+  <div style="margin-top: 10px;">
     <a id="downloadBtn" download="video.mp4">
       <button>تنزيل إلى جهازك</button>
     </a>
   </div>
+    </div>
 
   <a href="https://t.me/bsx_hl" target="_blank" class="telegram">
     <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
