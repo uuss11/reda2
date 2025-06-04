@@ -1,0 +1,102 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    direction: rtl;
+    text-align: right;
+}
+
+.container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+}
+
+h1 {
+    color: #fe2c55; 
+    margin-bottom: 15px;
+}
+
+p {
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#tiktokUrl {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: right; 
+}
+
+#tiktokUrl:focus {
+    outline: none;
+    border-color: #fe2c55;
+    box-shadow: 0 0 0 3px rgba(254, 44, 85, 0.2);
+}
+
+#downloadBtn {
+    padding: 12px 25px;
+    background-color: #fe2c55;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#downloadBtn:hover {
+    background-color: #d8254b;
+}
+
+.result-area {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    word-break: break-all; 
+}
+
+.result-area a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.result-area a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.loading-message {
+    color: #fe2c55;
+    font-weight: bold;
+}
